@@ -4,12 +4,11 @@ kind: Deployment
 metadata:
   name: carts
   namespace: staging
-  labels:
-    name: carts
 spec:
   replicas: 1
-  matchLabels:
-    name: carts
+  selector:
+    matchLabels:
+      app: carts
   template:
     metadata:
       labels:

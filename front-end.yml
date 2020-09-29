@@ -4,12 +4,11 @@ kind: Deployment
 metadata:
   name: front-end
   namespace: staging
-  labels:
-    name: front-end
 spec:
   replicas: 1
-  matchLabels:
-    name: front-end
+  selector:
+    matchLabels:
+      app: front-end
   template:
     metadata:
       labels:
