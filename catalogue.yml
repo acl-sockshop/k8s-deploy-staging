@@ -4,8 +4,12 @@ kind: Deployment
 metadata:
   name: catalogue
   namespace: staging
+  labels:
+    name: catalogue
 spec:
   replicas: 1
+  matchLabels:
+    name: catalogue
   template:
     metadata:
       labels:
