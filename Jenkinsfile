@@ -1,4 +1,7 @@
-@Library('dynatrace@master') _
+@Library('dynatrace@master')
+@Library('keptn-library@master')
+import sh.keptn.Keptn
+def keptn = new sh.keptn.Keptn()
 
 def tagMatchRules = [
   [
@@ -13,17 +16,27 @@ def tagMatchRules = [
 ]
 
 pipeline {
+  agent {
+    label 'kubegit'
+  }
+
   parameters {
     string(name: 'APP_NAME', defaultValue: '', description: 'The name of the service to deploy.', trim: true)
     string(name: 'TAG_STAGING', defaultValue: '', description: 'The image of the service to deploy.', trim: true)
     string(name: 'VERSION', defaultValue: '', description: 'The version of the service to deploy.', trim: true)
   }
-  agent {
-    label 'kubegit'
+
+  environment {
+    KEPTN_PROJECT = "sockshop"
+    KEPTN_SERVICE = "${APP_NAME}"
+    KEPTN_STAGE = "staging"
+    KEPTN_MONITORING = "dynatrace"
+    KEPTN_SHIPYARD = "keptn/e2e-shipyard.yaml"
+    KEPTN_SLI = "keptn/e2e-sli.yaml"
+    KEPTN_SLO = "keptn/e2e-slo.yaml"
+    KEPTN_DT_CONF = "keptn/dynatrace.conf.yaml"
   }
-  options {
-    disableConcurrentBuilds()
-  }
+
   stages {
     stage('Update Deployment and Service specification') {
       steps {
@@ -37,7 +50,8 @@ pipeline {
           }
         }
       }
-    }
+    } // end stage
+
     stage('Deploy to staging namespace') {
       steps {
         checkout scm
@@ -45,9 +59,10 @@ pipeline {
           sh "kubectl -n staging apply -f ${env.APP_NAME}.yml"
         }
       }
-    }
-    // DO NOT uncomment until 06_04 Lab
-    /*
+    } // end stage
+
+// DO NOT uncomment until 06_04 Lab
+/* 
     stage('DT Deploy Event') {
       steps {
         container("curl") {
@@ -63,11 +78,22 @@ pipeline {
           }
         }
       }
-    }
-    */
+    } // end stage
+*/
+
+// DO NOT uncomment until 10_01 Lab
+/* 
+    stage('Keptn Init') {
+      steps{
+        script {
+          keptn.keptnInit project:"${KEPTN_PROJECT}", service:"${KEPTN_SERVICE}", stage:"${KEPTN_STAGE}", monitoring:"${KEPTN_MONITORING}", shipyard: "${KEPTN_SHIPYARD}"
+          keptn.keptnAddResources("${KEPTN_SLI}",'dynatrace/sli.yaml')
+          keptn.keptnAddResources("${KEPTN_SLO}",'slo.yaml')
+          keptn.keptnAddResources("${KEPTN_DT_CONF}",'dynatrace/dynatrace.conf.yaml')          
+        }
+      }
+    } // end stage
     
-    // DO NOT uncomment until 10_01 Lab
-    /*
     stage('Staging Warm Up') {
       steps {
         echo "Waiting for the service to start..."
@@ -104,48 +130,49 @@ pipeline {
             }
           }
         }
-        sleep 60
       }
-    }
+    } // end stage
 
     stage('Run production ready e2e check in staging') {
       steps {
-        recordDynatraceSession (
-          envId: 'Dynatrace Tenant',
-          testCase: 'loadtest',
-          tagMatchRules: tagMatchRules
-        ) 
-        {
-          container('jmeter') {
-            script {
-              def status = executeJMeter ( 
-                scriptName: "jmeter/front-end_e2e_load.jmx",
-                resultsDir: "e2eCheck_${env.APP_NAME}_staging_${env.VERSION}_${BUILD_NUMBER}",
-                serverUrl: "front-end.staging", 
-                serverPort: 80,
-                checkPath: '/health',
-                vuCount: 10,
-                loopCount: 5,
-                LTN: "e2eCheck_${BUILD_NUMBER}",
-                funcValidation: false,
-                avgRtValidation: 4000
-              )
-              if (status != 0) {
-                currentBuild.result = 'FAILED'
-                error "Production ready e2e check in staging failed."
-              }
+        script {
+            keptn.markEvaluationStartTime()
+        }
+        container('jmeter') {
+          script {
+            def status = executeJMeter ( 
+              scriptName: "jmeter/front-end_e2e_load.jmx",
+              resultsDir: "e2eCheck_${env.APP_NAME}_staging_${env.VERSION}_${BUILD_NUMBER}",
+              serverUrl: "front-end.staging", 
+              serverPort: 80,
+              checkPath: '/health',
+              vuCount: 10,
+              loopCount: 5,
+              LTN: "e2eCheck_${BUILD_NUMBER}",
+              funcValidation: false,
+              avgRtValidation: 4000
+            )
+            if (status != 0) {
+              currentBuild.result = 'FAILED'
+              error "Production ready e2e check in staging failed."
             }
           }
         }
-        //sleeping to allow data to arrive in Dynatrace
-        sleep 60
-        perfSigDynatraceReports(
-          envId: 'Dynatrace Tenant', 
-          nonFunctionalFailure: 2, 
-          specFile: "monspec/e2e_perfsig.json"
-        )
+        script {
+          def keptnContext = keptn.sendStartEvaluationEvent starttime:"", endtime:"" 
+          echo "Open Keptns Bridge: ${keptn_bridge}/trace/${keptnContext}"
+        }
       }
-    }
-    */
-  }
-}
+    } // end stage
+
+    stage('Pipeline Quality Gate') {
+      steps {
+        script {
+          def result = keptn.waitForEvaluationDoneEvent setBuildResult:true, waitTime:'5'
+          echo "${result}"
+        }
+      }
+    } // end stage
+*/
+  } // end stages
+} // end pipeline
