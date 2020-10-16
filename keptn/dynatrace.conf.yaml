@@ -1,0 +1,17 @@
+---
+spec_version: '0.1.0'
+dtCreds: dynatrace
+attachRules:
+  tagRule:
+  - meTypes:
+    - SERVICE
+    tags:
+    - context: ENVIRONMENT
+      key: product
+      value: $PROJECT
+    - context: CONTEXTLESS
+      key: app
+      value: $SERVICE
+    - context: CONTEXTLESS
+      key: environment
+      value: $STAGE
