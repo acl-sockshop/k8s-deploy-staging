@@ -6,9 +6,6 @@ attachRules:
   - meTypes:
     - SERVICE
     tags:
-    - context: ENVIRONMENT
-      key: product
-      value: $PROJECT
     - context: CONTEXTLESS
       key: app
       value: $SERVICE
