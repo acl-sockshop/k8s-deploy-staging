@@ -35,6 +35,9 @@ pipeline {
     KEPTN_SLI = "keptn/e2e-sli.yaml"
     KEPTN_SLO = "keptn/e2e-slo.yaml"
     KEPTN_DT_CONF = "keptn/dynatrace.conf.yaml"
+    KEPTN_ENDPOINT = credentials('keptn-endpoint')
+    KEPTN_API_TOKEN = credentials('keptn-api-token')
+    KEPTN_BRIDGE = credentials('keptn-bridge')
   }
 
   stages {
