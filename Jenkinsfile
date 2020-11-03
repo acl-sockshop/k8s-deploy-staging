@@ -27,7 +27,7 @@ pipeline {
   }
 
   environment {
-    KEPTN_PROJECT = "sockshop"
+    KEPTN_PROJECT = "acl-sockshop"
     KEPTN_SERVICE = "${APP_NAME}"
     KEPTN_STAGE = "staging"
     KEPTN_MONITORING = "dynatrace"
