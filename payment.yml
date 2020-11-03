@@ -20,7 +20,7 @@ spec:
         image: 10.31.240.247:5000/library/sockshop/payment-0.6.0
         env: 
         - name: DT_TAGS
-          value: "product=acl-sockshop"
+          value: "product=sockshop"
         - name: DT_CUSTOM_PROP
           value: "SERVICE_TYPE=BACKEND"
         resources:
