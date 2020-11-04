@@ -29,6 +29,8 @@ pipeline {
     string(name: 'VERSION', defaultValue: '', description: 'The version of the service to deploy.', trim: true)
   }
 
+// DO NOT uncomment until 10_01 Lab
+/* 
   environment {
     KEPTN_PROJECT = "acl-sockshop"
     KEPTN_SERVICE = "${APP_NAME}"
@@ -42,7 +44,7 @@ pipeline {
     KEPTN_API_TOKEN = credentials('keptn-api-token')
     KEPTN_BRIDGE = credentials('keptn-bridge')
   }
-
+*/
   stages {
     stage('Update Deployment and Service specification') {
       steps {
