@@ -1,7 +1,10 @@
 @Library('dynatrace@v1.0')
+// DO NOT uncomment until 10_01 Lab
+/* 
 @Library('keptn-library@3.3')
 import sh.keptn.Keptn
 def keptn = new sh.keptn.Keptn()
+*/
 
 def tagMatchRules = [
   [
