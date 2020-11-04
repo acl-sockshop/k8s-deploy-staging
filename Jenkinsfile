@@ -26,19 +26,19 @@ pipeline {
     string(name: 'VERSION', defaultValue: '', description: 'The version of the service to deploy.', trim: true)
   }
 
-  environment {
-    KEPTN_PROJECT = "acl-sockshop"
-    KEPTN_SERVICE = "${APP_NAME}"
-    KEPTN_STAGE = "staging"
-    KEPTN_MONITORING = "dynatrace"
-    KEPTN_SHIPYARD = "keptn/e2e-shipyard.yaml"
-    KEPTN_SLI = "keptn/e2e-sli.yaml"
-    KEPTN_SLO = "keptn/e2e-slo.yaml"
-    KEPTN_DT_CONF = "keptn/dynatrace.conf.yaml"
-    KEPTN_ENDPOINT = credentials('keptn-endpoint')
-    KEPTN_API_TOKEN = credentials('keptn-api-token')
-    KEPTN_BRIDGE = credentials('keptn-bridge')
-  }
+  // environment {
+  //   KEPTN_PROJECT = "acl-sockshop"
+  //   KEPTN_SERVICE = "${APP_NAME}"
+  //   KEPTN_STAGE = "staging"
+  //   KEPTN_MONITORING = "dynatrace"
+  //   KEPTN_SHIPYARD = "keptn/e2e-shipyard.yaml"
+  //   KEPTN_SLI = "keptn/e2e-sli.yaml"
+  //   KEPTN_SLO = "keptn/e2e-slo.yaml"
+  //   KEPTN_DT_CONF = "keptn/dynatrace.conf.yaml"
+  //   KEPTN_ENDPOINT = credentials('keptn-endpoint')
+  //   KEPTN_API_TOKEN = credentials('keptn-api-token')
+  //   KEPTN_BRIDGE = credentials('keptn-bridge')
+  // }
 
   stages {
     stage('Update Deployment and Service specification') {
