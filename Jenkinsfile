@@ -38,7 +38,7 @@ pipeline {
     KEPTN_MONITORING = "dynatrace"
     KEPTN_SHIPYARD = "keptn/e2e-shipyard.yaml"
     KEPTN_SLI = "keptn/e2e-sli.yaml"
-    KEPTN_SLO = "keptn/e2e-slo.yaml"
+    KEPTN_SLO = "keptn/${APP_NAME}-slo.yaml"
     KEPTN_DT_CONF = "keptn/dynatrace.conf.yaml"
     KEPTN_ENDPOINT = credentials('keptn-endpoint')
     KEPTN_API_TOKEN = credentials('keptn-api-token')
