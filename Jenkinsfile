@@ -1,4 +1,4 @@
-@Library('dynatrace@v1.0')
+@Library('dynatrace@v1.0') _
 // DO NOT uncomment until 10_01 Lab
 /* 
 @Library('keptn-library@3.3')
