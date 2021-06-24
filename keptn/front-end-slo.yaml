@@ -14,14 +14,6 @@ objectives:
     warning:          # if the response time is above 1400ms and less or equal to 1500ms, the result should be a warning
       - criteria:
           - "<=1500"  # if the response time is above 1500ms, the result should be a failure
-  - sli: "error_rate"
-    pass:
-      - criteria:
-          - "<=+5%"
-          - "<0.5"
-    warning:
-      - criteria:
-          - "<5"
 total_score:
   pass: "90%"
   warning: "75%"
